@@ -5,7 +5,7 @@
 // ⚠️ เปลี่ยน URL นี้เป็น Render backend URL ตอน deploy
 const API_BASE = window.location.hostname === 'localhost'
   ? 'http://localhost:3001/api/auth'
-  : 'https://YOUR-RENDER-APP.onrender.com/api/auth';  // ← เปลี่ยนตอน deploy
+  : 'https://huntergg555-rgb-tourism-promotion-mobile.onrender.com/api/auth';
 
 let currentMode = 'vulnerable';
 
