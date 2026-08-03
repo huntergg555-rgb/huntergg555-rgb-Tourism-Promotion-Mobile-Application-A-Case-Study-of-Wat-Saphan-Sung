@@ -384,6 +384,188 @@ WHERE username = '' OR '1'='1' -- ' AND password = 'x'
                     </div>
                 </div>
 
+                <!-- ใช้ได้กับเว็บไซต์แบบไหนบ้าง -->
+                <div class="vuln-scope-section">
+                    <h2 class="section-title"><i class="fas fa-crosshairs"></i> ใช้ได้กับเว็บไซต์แบบไหนบ้าง?</h2>
+                    <p class="scope-subtitle">การโจมตีแต่ละแบบจะมีผลกับเว็บไซต์ที่มีลักษณะเฉพาะ ขึ้นอยู่กับวิธีการเขียนโค้ดและการตั้งค่าความปลอดภัย</p>
+
+                    <div class="scope-grid">
+                        <!-- SQL Injection Scope -->
+                        <div class="scope-card">
+                            <div class="scope-card-header danger">
+                                <i class="fas fa-syringe"></i>
+                                <h3>SQL Injection</h3>
+                            </div>
+                            <div class="scope-card-body">
+                                <div class="scope-group vulnerable">
+                                    <h4><i class="fas fa-unlock"></i> เว็บที่เสี่ยง</h4>
+                                    <ul class="scope-list">
+                                        <li>
+                                            <i class="fas fa-database"></i>
+                                            <div><strong>ใช้ SQL Database โดยตรง</strong><span>MySQL, PostgreSQL, SQLite, MSSQL</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-code"></i>
+                                            <div><strong>ต่อ query ด้วย String Concatenation</strong><span>"SELECT * FROM users WHERE name='" + input + "'"</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-times-circle"></i>
+                                            <div><strong>ไม่ใช้ Parameterized Query</strong><span>ไม่ใช้ ? placeholder หรือ Prepared Statement</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            <div><strong>ไม่มี Input Validation</strong><span>ไม่กรอง special characters เช่น ' " --</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-history"></i>
+                                            <div><strong>ระบบเก่า (Legacy Systems)</strong><span>เว็บ PHP เก่า, Classic ASP, CGI scripts</span></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="scope-group safe">
+                                    <h4><i class="fas fa-lock"></i> เว็บที่ปลอดภัย</h4>
+                                    <ul class="scope-list">
+                                        <li>
+                                            <i class="fas fa-shield-alt"></i>
+                                            <div><strong>ใช้ ORM</strong><span>Sequelize, Prisma, Django ORM, Hibernate</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-leaf"></i>
+                                            <div><strong>ใช้ NoSQL</strong><span>MongoDB ไม่ใช้ SQL (แต่อาจมี NoSQL Injection)</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-fire-alt"></i>
+                                            <div><strong>ใช้ WAF</strong><span>Cloudflare, AWS WAF ตรวจจับ pattern โจมตี</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-file-code"></i>
+                                            <div><strong>Static Websites</strong><span>ไม่มี database เลย</span></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Session Hijacking Scope -->
+                        <div class="scope-card">
+                            <div class="scope-card-header warning">
+                                <i class="fas fa-cookie-bite"></i>
+                                <h3>Session Hijacking</h3>
+                            </div>
+                            <div class="scope-card-body">
+                                <div class="scope-group vulnerable">
+                                    <h4><i class="fas fa-unlock"></i> เว็บที่เสี่ยง</h4>
+                                    <ul class="scope-list">
+                                        <li>
+                                            <i class="fas fa-archive"></i>
+                                            <div><strong>เก็บ Token ใน localStorage</strong><span>ดึงได้ง่ายผ่าน XSS attack</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-cookie"></i>
+                                            <div><strong>Cookie ไม่ตั้ง HttpOnly</strong><span>JavaScript อ่าน cookie ได้</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-unlock-alt"></i>
+                                            <div><strong>Cookie ไม่ตั้ง Secure Flag</strong><span>ส่ง cookie ผ่าน HTTP (ไม่เข้ารหัส)</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-bug"></i>
+                                            <div><strong>มีช่องโหว่ XSS</strong><span>ผู้โจมตีฝัง script ขโมย token ได้</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-wifi"></i>
+                                            <div><strong>ใช้ HTTP แทน HTTPS</strong><span>ดักจับ traffic ด้วย packet sniffing</span></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="scope-group safe">
+                                    <h4><i class="fas fa-lock"></i> เว็บที่ปลอดภัย</h4>
+                                    <ul class="scope-list">
+                                        <li>
+                                            <i class="fas fa-shield-alt"></i>
+                                            <div><strong>HttpOnly + Secure + SameSite Cookies</strong><span>ตั้งค่า cookie flags ครบถ้วน</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-sync-alt"></i>
+                                            <div><strong>Token Rotation</strong><span>เปลี่ยน token ทุกครั้งที่ใช้งาน</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-fingerprint"></i>
+                                            <div><strong>ตรวจสอบ IP / Device Fingerprint</strong><span>ระบุอุปกรณ์ร่วมด้วย</span></div>
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-code"></i>
+                                            <div><strong>Content Security Policy (CSP)</strong><span>ป้องกัน XSS injection</span></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Table -->
+                    <div class="comparison-section">
+                        <h3><i class="fas fa-chart-bar"></i> เปรียบเทียบตามประเภทเว็บไซต์</h3>
+                        <div class="comparison-table-wrap">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>ประเภทเว็บไซต์</th>
+                                        <th><i class="fas fa-syringe"></i> SQL Injection</th>
+                                        <th><i class="fas fa-cookie-bite"></i> Session Hijacking</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><i class="fas fa-globe row-icon"></i> เว็บเก่า (PHP, ASP) ไม่ได้ update</td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยงสูง</span></td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยงสูง</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-shopping-cart row-icon"></i> เว็บ E-commerce เล็กๆ</td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยง</span></td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยง</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-code row-icon"></i> เว็บ Custom CMS ทำเอง</td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยง</span></td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยง</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fab fa-wordpress row-icon"></i> WordPress (ไม่ update plugin)</td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยง</span></td>
+                                        <td><span class="risk-badge high"><i class="fas fa-exclamation-circle"></i> เสี่ยง</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-rocket row-icon"></i> Framework สมัยใหม่ (Next.js, Django, Rails)</td>
+                                        <td><span class="risk-badge low"><i class="fas fa-check-circle"></i> เสี่ยงต่ำ</span></td>
+                                        <td><span class="risk-badge medium"><i class="fas fa-minus-circle"></i> ขึ้นอยู่กับ config</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-university row-icon"></i> Banking / Enterprise ขนาดใหญ่</td>
+                                        <td><span class="risk-badge low"><i class="fas fa-check-circle"></i> เสี่ยงต่ำมาก</span></td>
+                                        <td><span class="risk-badge low"><i class="fas fa-check-circle"></i> เสี่ยงต่ำมาก</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-file-alt row-icon"></i> Static Sites (HTML ล้วน)</td>
+                                        <td><span class="risk-badge none"><i class="fas fa-ban"></i> ไม่เสี่ยง</span></td>
+                                        <td><span class="risk-badge none"><i class="fas fa-ban"></i> ไม่เสี่ยง</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Key Takeaway -->
+                    <div class="key-takeaway">
+                        <div class="takeaway-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div class="takeaway-content">
+                            <h4>ข้อสรุปสำคัญ</h4>
+                            <p>การโจมตีทั้งสองแบบ <strong>ไม่ได้ขึ้นอยู่กับประเภทเว็บไซต์</strong> เท่านั้น แต่ขึ้นอยู่กับ <strong>วิธีการเขียนโค้ด</strong> และ <strong>การตั้งค่าความปลอดภัย</strong> เป็นหลัก เว็บที่ใช้เทคโนโลยีใหม่แต่เขียนไม่ดีก็ยังโดนโจมตีได้</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="reference-section">
                     <h3><i class="fas fa-link"></i> อ้างอิง</h3>
                     <ul>
